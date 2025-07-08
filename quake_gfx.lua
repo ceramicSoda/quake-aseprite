@@ -1,3 +1,5 @@
+require "quake_io"
+
 function init(plugin)
     plugin:newMenuGroup{
         id = "quake_id",
@@ -33,7 +35,7 @@ function init(plugin)
 
             local data = dlg.data
             if data.confirm then
-                
+                importLmpPal(data.import_lmp_pal_f);
             end
         end
     }
