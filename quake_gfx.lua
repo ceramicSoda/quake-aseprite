@@ -3,7 +3,7 @@ require "quake_io"
 function init(plugin)
     plugin:newMenuGroup{
         id = "quake_id",
-        title = "Quake gfx files",
+        title = "Quake gfx",
         group = "file_import"
     }
 
@@ -41,15 +41,15 @@ function init(plugin)
     }
     
     plugin:newCommand{
-        id = "export_lmp_pal",
-        title = "Export .lmp palette",
+        id = "export_spr_lmp_pal",
+        title = "Export sprite to .lmp palette",
         group = "quake_id",
         onclick = function()
-            local dlg = Dialog({ title = "export .lmp palette", notitlebar = false })
+            local dlg = Dialog({ title = "export sprite to .lmp palette", notitlebar = false })
             dlg:file{
                 id = "export_lmp_pal_f",
-                label = "export .lmp palette",
-                title = "export .lmp palette",
+                label = "export sprite to .lmp palette",
+                title = "export sprite to .lmp palette",
                 open = false,
                 save = true,
                 filename = "palette",
@@ -68,7 +68,7 @@ function init(plugin)
 
             local data = dlg.data
             if data.confirm then
-                
+                exportSprLmpPal(data.export_lmp_pal_f)
             end
         end
     }
