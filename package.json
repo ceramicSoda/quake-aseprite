@@ -1,0 +1,17 @@
+{
+    "name": "quake-lmp",
+    "displayName": "Quake gfx (.lmp)",
+    "description": "Quake gfx import / export",
+    "version": "0.1",
+    "author": { "name": "Ceramic Soda",
+                "url": "https://github.com/ceramicSoda" },
+    "contributors": [ ],
+    "publisher": "ceramicSoda",
+    "license": "CC-BY-4.0",
+    "categories": [ "Scripts" ],
+    "contributes": {
+      "scripts": [
+          { "path": "./quake_gfx.lua" }
+      ]
+    }
+  }
