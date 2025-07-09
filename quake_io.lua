@@ -1,5 +1,23 @@
 require "quake_pal"
 
+function validateSizes(height, width, len)
+    local valid = true
+    if width < 1 or width > 2048 or height < 1 or height > 2048 then
+        app.alert("Image has wrong dimensions")
+        valid = false
+    elseif len ~= (height * width + 8) then
+        app.alert("Image data may be corrupted")
+        valid = false
+    end
+
+    if valid then
+        return height, width, 8
+    else    -- guessing sizes for files like pop.lmp 
+        height = math.floor(math.sqrt(len))
+        return height, height, 0
+    end
+end
+
 -- Palette file import
 function importLmpPal(filename)
     local f = assert(io.open(filename, "rb"))
@@ -44,6 +62,7 @@ function importLmp(filename)
     local offset = 8;
     local width = string.unpack("<I4", data:sub(1,4))
     local height = string.unpack("<I4", data:sub(5,8))
+    width, height, offset = validateSizes(width, height, data:len())
 
     local spr = Sprite(width, height, ColorMode.INDEXED)
     local img = spr.cels[1].image
