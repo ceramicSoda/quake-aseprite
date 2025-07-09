@@ -1,4 +1,4 @@
-require "quake_pal"
+require "quake_helpers"
 
 function validateSizes(height, width, len)
     local valid = true
@@ -119,13 +119,13 @@ end
 function exportSprLmp(filename)
     local spr = app.sprite
     local f = assert(io.open(filename, "wb"))
-    if #spr.palettes[1] < 256 then
+    if #spr.palettes[1] < 255 then
         app.alert("Warning! Sprite palette is shorter than 256")
-        return
     end
     local img = Image(spr.spec)
     local height = spr.height;
     local width = spr.width;
+    local qPal = getDefaultPalette()
     img:drawSprite(spr, app.frame)
 
     f:write(string.pack("<I4", width))
@@ -134,8 +134,12 @@ function exportSprLmp(filename)
         for j = 0, (width - 1) do
             local c = img:getPixel(j, i)
             if spr.colorMode == ColorMode.INDEXED then
-                local c = math.min(255, math.max(0, c - 1))
+                c = math.min(255, math.max(0, c - 1))
                 f:write(string.char(c))
+            else
+                local clr = Color(c)
+                local pIdx = approxColor(clr, qPal)
+                f:write(string.char(pIdx))
             end
         end
     end
