@@ -7,7 +7,7 @@ function validateSizes(height, width, len)
         valid = false
     elseif len ~= (height * width + 8) then
         app.alert("Image data may be corrupted")
-        valid = false
+        valid = true
     end
 
     if valid then
@@ -67,6 +67,7 @@ function importLmp(filename)
     local spr = Sprite(width, height, ColorMode.INDEXED)
     local img = spr.cels[1].image
     local pal = getDefaultPalette();
+    spr.filename = filename
     spr:setPalette(pal)
 
     for i = 0, width do
@@ -87,9 +88,10 @@ end
 function exportSprLmpPal(filename)
     local spr = app.sprite
     if spr.width ~= 16 or spr.height ~= 16 then
-        app.alert("Sprite must be 16x16 pixels! \n Aborted") 
+        app.alert("Sprite must be 16x16 pixels! Aborted")
         return
     end
+    spr.filename = filename
     local img = Image(spr.spec)
     img:drawSprite(spr, app.frame)
 
@@ -107,6 +109,34 @@ function exportSprLmpPal(filename)
             local g = app.pixelColor.rgbaG(c)
             local b = app.pixelColor.rgbaB(c)
             f:write(string.char(r, g, b))
+        end
+    end
+    io.close(f)
+    app.alert("Done!") 
+end
+
+-- Regular image file export
+function exportSprLmp(filename)
+    local spr = app.sprite
+    local f = assert(io.open(filename, "wb"))
+    if #spr.palettes[1] < 256 then
+        app.alert("Warning! Sprite palette is shorter than 256")
+        return
+    end
+    local img = Image(spr.spec)
+    local height = spr.height;
+    local width = spr.width;
+    img:drawSprite(spr, app.frame)
+
+    f:write(string.pack("<I4", width))
+    f:write(string.pack("<I4", height))
+    for i = 0, (height - 1) do
+        for j = 0, (width - 1) do
+            local c = img:getPixel(j, i)
+            if spr.colorMode == ColorMode.INDEXED then
+                local c = math.min(255, math.max(0, c - 1))
+                f:write(string.char(c))
+            end
         end
     end
     io.close(f)
