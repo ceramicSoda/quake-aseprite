@@ -39,7 +39,7 @@ function init(plugin)
             end
         end
     }
-    
+
     plugin:newCommand{
         id = "export_spr_lmp_pal",
         title = "Export sprite to .lmp palette",
@@ -74,4 +74,37 @@ function init(plugin)
     }
 
     plugin:newMenuSeparator{ group = "quake_id" }
+
+    plugin:newCommand{
+        id = "import_lmp",
+        title = "Import .lmp image",
+        group = "quake_id",
+        onclick = function()
+            local dlg = Dialog({ title = "Import .lmp image", notitlebar = false })
+            dlg:file{
+                id = "import_lmp_f",
+                label = "Import .lmp image",
+                title = "Import .lmp image",
+                open = true,
+                focus = true,
+                filename = "",
+                filetypes = {"lmp"},
+                onchange = function()
+                    dlg:modify({
+                        id = "confirm",
+                        enabled = true
+                    })
+                end
+            }
+
+            dlg:button{ id = "confirm", text = "Import", enabled = false}
+            dlg:button{ id = "cancel", text = "Cancel" }
+            dlg:show()
+
+            local data = dlg.data
+            if data.confirm then
+                importLmp(data.import_lmp_f);
+            end
+        end
+    }
 end

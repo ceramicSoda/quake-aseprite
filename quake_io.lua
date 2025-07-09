@@ -1,5 +1,8 @@
+require "quake_pal"
+
+-- Palette file import
 function importLmpPal(filename)
-    local f = assert(io.open(filename, "r"))
+    local f = assert(io.open(filename, "rb"))
     if not f then
         app.alert("Cannot open " + filename)
         return
@@ -28,6 +31,40 @@ function importLmpPal(filename)
     app.refresh()
 end
 
+-- Regular image file import
+function importLmp(filename)
+    local f = assert(io.open(filename, "rb"))
+    if not f then
+        app.alert("Cannot open " + filename)
+        return
+    end
+    local data = f:read("*all")
+    f:close()
+
+    local offset = 8;
+    local width = string.unpack("<I4", data:sub(1,4))
+    local height = string.unpack("<I4", data:sub(5,8))
+
+    local spr = Sprite(width, height, ColorMode.INDEXED)
+    local img = spr.cels[1].image
+    local pal = getDefaultPalette();
+    spr:setPalette(pal)
+
+    for i = 0, width do
+        for j = 0, height do
+            local pos = (offset) + i + j * width + 1
+            local idx = 0
+            if (data:byte(pos) ~= nil) then
+                if (data:byte(pos) < 255) then
+                    idx = data:byte(pos) + 1
+                end
+            end
+            img:putPixel(i, j, idx)
+        end
+    end
+end
+
+-- Palette file export
 function exportSprLmpPal(filename)
     local spr = app.sprite
     if spr.width ~= 16 or spr.height ~= 16 then
