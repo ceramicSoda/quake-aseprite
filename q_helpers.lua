@@ -54,7 +54,7 @@ end
 
 function approxColor(c, qPal)
     if (c.alpha < 128) then
-        return qPal:getColor(255) -- transparent
+        return 255 -- transparent
     end
     local match = 0
     local dist = colorDistance(c, qPal:getColor(0))

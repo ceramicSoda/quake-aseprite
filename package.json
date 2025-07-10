@@ -1,17 +1,17 @@
 {
     "name": "quake-lmp",
-    "displayName": "Quake gfx (.lmp)",
-    "description": "Quake gfx import / export",
-    "version": "0.1",
+    "displayName": "Quake graphics",
+    "description": "Quake graphics import / export (.lmp)",
+    "version": "0.2",
     "author": { "name": "Ceramic Soda",
                 "url": "https://github.com/ceramicSoda" },
     "contributors": [ ],
     "publisher": "ceramicSoda",
-    "license": "CC-BY-4.0",
+    "license": "GNU GPLv3",
     "categories": [ "Scripts" ],
     "contributes": {
       "scripts": [
-          { "path": "./quake_gfx.lua" }
+          { "path": "./q_gui.lua" }
       ]
     }
   }

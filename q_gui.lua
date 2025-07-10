@@ -1,0 +1,112 @@
+require "q_io"
+
+function init(plugin)
+    plugin:newMenuGroup{
+        id = "quake_id",
+        title = "Quake gfx",
+        group = "file_import"
+    }
+
+    plugin:newCommand{
+        id = "import_lmp",
+        title = "Import .LMP",
+        group = "quake_id",
+        onclick = function()
+            local dlg = Dialog({ title = "Import .LMP", notitlebar = false })
+            dlg:file{
+                id = "import_lmp_f",
+                label = " File: ",
+                title = "Import .LMP",
+                open = true,
+                focus = true,
+                filename = "",
+                filetypes = {"lmp"},
+                onchange = function()
+                    dlg:modify({ id = "confirm", enabled = true })
+                end
+            }
+            dlg:label{text = string.rep(" ", 60)} 
+            dlg:separator{}
+            dlg:combobox{
+                id = "import_lmp_filetype",
+                label = " Type: ",
+                option = "Image",
+                options = {"Image", "Palette"},
+            }
+            dlg:button{ id = "confirm", text = "Import", enabled = false}
+            dlg:button{ id = "cancel", text = "Cancel" }
+            dlg:show()
+
+            local data = dlg.data
+            local filetype = dlg.data.import_lmp_filetype
+            if data.confirm then
+                if filetype == "Image" then
+                    importLmp(data.import_lmp_f);
+                elseif filetype == "Palette" then
+                    importLmpPal(data.import_lmp_f);
+                end
+            end
+        end
+    }
+
+
+    plugin:newCommand{
+        id = "export_spr_lmp",
+        title = "Export .LMP",
+        group = "quake_id",
+        onclick = function()
+            local dlg = Dialog({ title = "export .LMP", notitlebar = false })
+            dlg:file{
+                id = "export_lmp_f",
+                label = " File: ",
+                title = "export .LMP",
+                open = false,
+                save = true,
+                filename = "",
+                filetypes = {"lmp"},
+                onchange = function()
+                    dlg:modify({ id = "confirm", enabled = app.sprite ~= nil })
+                end
+            }
+            dlg:label{text = string.rep(" ", 60)}
+            dlg:separator{}
+            dlg:combobox{
+                id = "export_lmp_filetype",
+                label = " Type: ",
+                option = "Image",
+                options = {"Image", "Palette"},
+                onchange = function ()
+                    dlg:modify({ id = "filesize_warning_a", visible = showWarning()})
+                    dlg:modify({ id = "filesize_warning_b", visible = showWarning()})
+                end
+            }
+            function showWarning()
+                if app.sprite ~= nil then
+                    if app.sprite.colorMode ~= ColorMode.INDEXED then
+                        return dlg.data.export_lmp_filetype == "Image"
+                    else 
+                        return false
+                    end
+                else
+                    return false
+                end
+            end
+            dlg:label{ id = "filesize_warning_a", label = "", text = "                    RGB color mode export is experimental ! ", visible = showWarning() }
+            dlg:label{ id = "filesize_warning_b", label = "", text = "            Not recommended for sprites bigger than 320x320 ", visible = showWarning() }
+            dlg:label{ id = "filesize_warning_c", label = "", text = "                                       Nothing to export :< ", visible = app.sprite == nil }
+            dlg:button{ id = "confirm", text = "Export", enabled = false}
+            dlg:button{ id = "cancel", text = "Cancel" }
+            dlg:show()
+
+            local data = dlg.data
+            local filetype = dlg.data.export_lmp_filetype
+            if data.confirm then
+                if filetype == "Image" then
+                    exportLmp(data.export_lmp_f)
+                elseif filetype == "Palette" then
+                    exportLmpPal(data.export_lmp_f)
+                end
+            end
+        end
+    }
+end

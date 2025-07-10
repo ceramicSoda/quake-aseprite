@@ -1,4 +1,4 @@
-require "quake_helpers"
+require "q_helpers"
 
 function validateSizes(height, width, len)
     local valid = true
@@ -85,7 +85,7 @@ function importLmp(filename)
 end
 
 -- Palette file export
-function exportSprLmpPal(filename)
+function exportLmpPal(filename)
     local spr = app.sprite
     if spr.width ~= 16 or spr.height ~= 16 then
         app.alert("Sprite must be 16x16 pixels! Aborted")
@@ -116,17 +116,22 @@ function exportSprLmpPal(filename)
 end
 
 -- Regular image file export
-function exportSprLmp(filename)
+function exportLmp(filename)
     local spr = app.sprite
     local f = assert(io.open(filename, "wb"))
-    if #spr.palettes[1] < 255 then
-        app.alert("Warning! Sprite palette is shorter than 256")
+    if #spr.palettes[1] < 255 and spr.colorMode == ColorMode.INDEXED then
+        app.alert("Warning! The sprite palette has less than 256 colors")
     end
     local img = Image(spr.spec)
     local height = spr.height;
     local width = spr.width;
     local qPal = getDefaultPalette()
     img:drawSprite(spr, app.frame)
+    if spr.colorMode ~= ColorMode.INDEXED then
+        if height * width > 100000 then
+            app.alert("!!! The file is too big, Aseprite may freeze !!!")
+        end
+    end
 
     f:write(string.pack("<I4", width))
     f:write(string.pack("<I4", height))
