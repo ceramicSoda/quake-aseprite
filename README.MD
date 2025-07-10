@@ -1,8 +1,6 @@
 # Quake images Import/Export Aseprite Plugin
 
-<div style="text-align: center;">
-  <img src="./quake-aseprite-img.png" alt="Quake aseprite lmp export import plugin">
-</div>
+![Quake aseprite lmp export import plugin preivew image](./quake-aseprite-img.png)
 
 This plugin allows you to work with Quake graphics files (`.lmp`) directly in Aseprite.
 - Import `.lmp` graphics into Aseprite
