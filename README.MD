@@ -1,6 +1,6 @@
 # Quake images Import/Export Aseprite Plugin
 
-<div style="text-align: center;">
+<div style="display: flex; justify-content: center; width: 100%">
   <img src="./quake-aseprite-img.png" alt="Quake aseprite lmp export import plugin">
 </div>
 
