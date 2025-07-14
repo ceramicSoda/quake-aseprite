@@ -38,6 +38,47 @@ function init(plugin)
         end
     }
 
+    plugin:newCommand{
+        id = "export_spr_spr",
+        title = "Export .SPR",
+        group = "quake_id",
+        onclick = function()
+            local dlg = Dialog({ title = "export .SPR", notitlebar = false })
+            dlg:file{
+                id = "export_spr_f",
+                label = " File: ",
+                title = "export .SPR",
+                open = false,
+                save = true,
+                filename = "",
+                filetypes = {"spr"},
+                onchange = function()
+                    dlg:modify({ id = "confirm", enabled = app.sprite ~= nil })
+                end
+            }
+            dlg:label{text = string.rep(" ", 60)}
+            dlg:separator{}
+            function showWarning()
+                if app.sprite.colorMode ~= ColorMode.INDEXED then
+                    return true
+                else
+                    return false
+                end
+            end
+            dlg:label{ id = "filesize_warning_a", label = "", text = "                    RGB color mode export is experimental ! ", visible = showWarning() }
+            dlg:label{ id = "filesize_warning_b", label = "", text = "            Not recommended for sprites bigger than 320x320 ", visible = showWarning() }
+            dlg:label{ id = "filesize_warning_c", label = "", text = "                                       Nothing to export :< ", visible = app.sprite == nil }
+            dlg:button{ id = "confirm", text = "Export", enabled = false}
+            dlg:button{ id = "cancel", text = "Cancel" }
+            dlg:show()
+
+            local data = dlg.data
+            if data.confirm then
+                exportSpr(data.export_spr_f, {type = 1, synchtype = 0})
+            end
+        end
+    }
+
     plugin:newMenuSeparator{ group = "quake_id" }
 
     plugin:newCommand{

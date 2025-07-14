@@ -126,7 +126,7 @@ function exportLmp(filename)
     local height = spr.height;
     local width = spr.width;
     local qPal = getDefaultPalette()
-    img:drawSprite(spr, app.frame)
+
     if spr.colorMode ~= ColorMode.INDEXED then
         if height * width > 100000 then
             app.alert("!!! The file is too big, Aseprite may freeze !!!")
@@ -142,8 +142,7 @@ function exportLmp(filename)
                 c = math.min(255, math.max(0, c - 1))
                 f:write(string.char(c))
             else
-                local clr = Color(c)
-                local pIdx = approxColor(clr, qPal)
+                local pIdx = approxColor(Color(c), qPal)
                 f:write(string.char(pIdx))
             end
         end
