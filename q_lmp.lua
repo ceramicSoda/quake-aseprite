@@ -22,7 +22,7 @@ end
 function importLmpPal(filename)
     local f = assert(io.open(filename, "rb"))
     if not f then
-        app.alert("Cannot open " + filename)
+        app.alert("Cannot open " .. filename)
         return
     end
     local data = f:read("*all")

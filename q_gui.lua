@@ -1,4 +1,5 @@
-require "q_io"
+require "q_lmp"
+require "q_spr"
 
 function init(plugin)
     plugin:newMenuGroup{
@@ -6,6 +7,38 @@ function init(plugin)
         title = "Quake gfx",
         group = "file_import"
     }
+
+    plugin:newCommand{
+        id = "import_spr",
+        title = "Import .SPR",
+        group = "quake_id",
+        onclick = function()
+            local dlg = Dialog({ title = "Import .SPR", notitlebar = false })
+            dlg:file{
+                id = "import_spr_f",
+                label = " File: ",
+                title = "Import .SPR",
+                open = true,
+                focus = true,
+                filename = "",
+                filetypes = {"spr"},
+                onchange = function()
+                    dlg:modify({ id = "confirm", enabled = true })
+                end
+            }
+            dlg:label{text = string.rep(" ", 60)} 
+            dlg:button{ id = "confirm", text = "Import", enabled = false}
+            dlg:button{ id = "cancel", text = "Cancel" }
+            dlg:show()
+
+            local data = dlg.data
+            if data.confirm then
+                importSpr(data.import_spr_f);
+            end
+        end
+    }
+
+    plugin:newMenuSeparator{ group = "quake_id" }
 
     plugin:newCommand{
         id = "import_lmp",
