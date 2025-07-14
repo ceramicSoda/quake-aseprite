@@ -1,8 +1,8 @@
 {
     "name": "quake-lmp",
     "displayName": "Quake graphics",
-    "description": "Quake graphics import / export (.lmp)",
-    "version": "0.2",
+    "description": "Quake graphics import / export (.lmp, .spr)",
+    "version": "0.3",
     "author": { "name": "Ceramic Soda",
                 "url": "https://github.com/ceramicSoda" },
     "contributors": [ ],
