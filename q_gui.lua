@@ -58,6 +58,27 @@ function init(plugin)
             }
             dlg:label{text = string.rep(" ", 60)}
             dlg:separator{}
+            dlg:combobox{
+                id = "import_spr_type",
+                label = " Type: ",
+                option = "0: Vertical, facing camera",
+                options = {
+                    "0: Facing camera, Vertical",
+                    "1: Facing camera, Vertical, Parallel to screen",
+                    "2: Facing camera, Parallel to screen",
+                    "3: Oriented",
+                    "4: Facing camera, Oriented",
+                },
+            }
+            dlg:combobox{
+                id = "import_spr_synchtype",
+                label = " Animation Sync Type: ",
+                option = "0: Synchronous",
+                options = {
+                    "0: Synchronous",
+                    "1: Own for each sprite",
+                },
+            }
             function showWarning()
                 if app.sprite.colorMode ~= ColorMode.INDEXED then
                     return true
@@ -74,7 +95,11 @@ function init(plugin)
 
             local data = dlg.data
             if data.confirm then
-                exportSpr(data.export_spr_f, {type = 1, synchtype = 0})
+                local settings = {
+                    type = tonumber(dlg.data.import_spr_type:match("^(%d+):")),
+                    synchtype = tonumber(dlg.data.import_spr_synchtype:match("^(%d+):"))
+                }
+                exportSpr(data.export_spr_f, settings)
             end
         end
     }
